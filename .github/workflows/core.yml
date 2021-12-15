@@ -33,7 +33,7 @@ jobs:
       matrix:
         hadoop: [hadoop2, hadoop3]
         python: [3.7, 3.8]
-        arch: [ubuntu-20.04, [self-hosted, ARM64, py-${{ matrix.python }}]]
+        arch: [ubuntu-20.04, fromJSON("[self-hosted, ARM64, py-${{ matrix.python }}]")]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
