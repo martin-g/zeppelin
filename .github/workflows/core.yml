@@ -57,7 +57,7 @@ jobs:
       - name: Setup conda environment with python ${{ matrix.python }} and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R_${{ github.job.name }}
+          activate-environment: python_3_with_R_${{ github.job }}
           environment-file: testing/env_python_${{ matrix.python }}_with_R.yml
           python-version: ${{ matrix.python }}
           auto-activate-base: false
@@ -100,7 +100,7 @@ jobs:
       - name: Setup conda environment with python 3.7 and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R_and_tensorflow_${{ github.job.name }}
+          activate-environment: python_3_with_R_and_tensorflow_${{ github.job }}
           environment-file: testing/env_python_3_with_R_and_tensorflow.yml
           python-version: 3.7
           auto-activate-base: false
@@ -134,7 +134,7 @@ jobs:
       - name: Setup conda environment with python 3.7 and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R_${{ github.job.name }}
+          activate-environment: python_3_with_R_${{ github.job }}
           environment-file: testing/env_python_3_with_R.yml
           python-version: 3.7
           auto-activate-base: false
@@ -177,7 +177,7 @@ jobs:
       - name: Setup conda environment with python 3.7 and
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_flink_${{ github.job.name }}
+          activate-environment: python_3_with_flink_${{ github.job }}
           environment-file: testing/env_python_3_with_flink_${{ matrix.flink }}.yml
           python-version: 3.7
           auto-activate-base: false
@@ -213,7 +213,7 @@ jobs:
       - name: Setup conda environment with python 3.7 and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R_${{ github.job.name }}
+          activate-environment: python_3_with_R_${{ github.job }}
           environment-file: testing/env_python_3_with_R.yml
           python-version: 3.7
           auto-activate-base: false
@@ -255,7 +255,7 @@ jobs:
       - name: Setup conda environment with python 3.7 and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R_${{ github.job.name }}
+          activate-environment: python_3_with_R_${{ github.job }}
           environment-file: testing/env_python_3_with_R.yml
           python-version: 3.7
           auto-activate-base: false
@@ -294,7 +294,7 @@ jobs:
       - name: Setup conda environment with python 3.7 and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R_${{ github.job.name }}
+          activate-environment: python_3_with_R_${{ github.job }}
           environment-file: testing/env_python_3_with_R.yml
           python-version: 3.7
           auto-activate-base: false
@@ -336,7 +336,7 @@ jobs:
       - name: Setup conda environment with python ${{ matrix.python }} and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R_${{ github.job.name }}
+          activate-environment: python_3_with_R_${{ github.job }}
           environment-file: testing/env_python_${{ matrix.python }}_with_R.yml
           python-version: ${{ matrix.python }}
           auto-activate-base: false
@@ -378,7 +378,7 @@ jobs:
       - name: Setup conda environment with python ${{ matrix.python }} and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R_${{ github.job.name }}
+          activate-environment: python_3_with_R_${{ github.job }}
           environment-file: testing/env_python_${{ matrix.python }}_with_R.yml
           python-version: ${{ matrix.python }}
           auto-activate-base: false
@@ -419,7 +419,7 @@ jobs:
       - name: Setup conda environment with python ${{ matrix.python }} and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R_${{ github.job.name }}
+          activate-environment: python_3_with_R_${{ github.job }}
           environment-file: testing/env_python_${{ matrix.python }}_with_R.yml
           python-version: ${{ matrix.python }}
           auto-activate-base: false
@@ -456,7 +456,7 @@ jobs:
       - name: Setup conda environment with python 3.7 and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R_${{ github.job.name }}
+          activate-environment: python_3_with_R_${{ github.job }}
           environment-file: testing/env_python_3_with_R.yml
           python-version: 3.7
           auto-activate-base: false
