@@ -56,11 +56,12 @@ jobs:
       - name: Setup conda environment with python ${{ matrix.python }} and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R
+          activate-environment: python_3_with_R_${{ github.job_id }}
           environment-file: testing/env_python_${{ matrix.python }}_with_R.yml
           python-version: ${{ matrix.python }}
           auto-activate-base: false
           channel-priority: strict
+          remove-profiles: false
       - name: Make IRkernel available to Jupyter
         run: |
           R -e "IRkernel::installspec()"
@@ -98,10 +99,11 @@ jobs:
       - name: Setup conda environment with python 3.7 and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R_and_tensorflow
+          activate-environment: python_3_with_R_and_tensorflow_${{ github.job_id }}
           environment-file: testing/env_python_3_with_R_and_tensorflow.yml
           python-version: 3.7
           auto-activate-base: false
+          remove-profiles: false
       - name: Make IRkernel available to Jupyter
         run: |
           R -e "IRkernel::installspec()"
@@ -131,10 +133,11 @@ jobs:
       - name: Setup conda environment with python 3.7 and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R
+          activate-environment: python_3_with_R_${{ github.job_id }}
           environment-file: testing/env_python_3_with_R.yml
           python-version: 3.7
           auto-activate-base: false
+          remove-profiles: false
       - name: Make IRkernel available to Jupyter
         run: |
           R -e "IRkernel::installspec()"
@@ -173,10 +176,11 @@ jobs:
       - name: Setup conda environment with python 3.7 and
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_flink
+          activate-environment: python_3_with_flink_${{ github.job_id }}
           environment-file: testing/env_python_3_with_flink_${{ matrix.flink }}.yml
           python-version: 3.7
           auto-activate-base: false
+          remove-profiles: false
       - name: install environment
         run: |
           ./mvnw install -DskipTests -DskipRat -am -pl flink/flink-scala-2.11,flink/flink-scala-2.12,flink-cmd,zeppelin-interpreter-integration -Pflink-${{ matrix.flink }} -Pintegration -B
@@ -208,10 +212,11 @@ jobs:
       - name: Setup conda environment with python 3.7 and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R
+          activate-environment: python_3_with_R_${{ github.job_id }}
           environment-file: testing/env_python_3_with_R.yml
           python-version: 3.7
           auto-activate-base: false
+          remove-profiles: false
       - name: Make IRkernel available to Jupyter
         run: |
           R -e "IRkernel::installspec()"
@@ -249,10 +254,11 @@ jobs:
       - name: Setup conda environment with python 3.7 and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R
+          activate-environment: python_3_with_R_${{ github.job_id }}
           environment-file: testing/env_python_3_with_R.yml
           python-version: 3.7
           auto-activate-base: false
+          remove-profiles: false
       - name: Make IRkernel available to Jupyter
         run: |
           R -e "IRkernel::installspec()"
@@ -287,10 +293,11 @@ jobs:
       - name: Setup conda environment with python 3.7 and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R
+          activate-environment: python_3_with_R_${{ github.job_id }}
           environment-file: testing/env_python_3_with_R.yml
           python-version: 3.7
           auto-activate-base: false
+          remove-profiles: false
       - name: Make IRkernel available to Jupyter
         run: |
           R -e "IRkernel::installspec()"
@@ -328,10 +335,11 @@ jobs:
       - name: Setup conda environment with python ${{ matrix.python }} and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R
+          activate-environment: python_3_with_R_${{ github.job_id }}
           environment-file: testing/env_python_${{ matrix.python }}_with_R.yml
           python-version: ${{ matrix.python }}
           auto-activate-base: false
+          remove-profiles: false
       - name: Make IRkernel available to Jupyter
         run: |
           R -e "IRkernel::installspec()"
@@ -369,10 +377,11 @@ jobs:
       - name: Setup conda environment with python ${{ matrix.python }} and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R
+          activate-environment: python_3_with_R_${{ github.job_id }}
           environment-file: testing/env_python_${{ matrix.python }}_with_R.yml
           python-version: ${{ matrix.python }}
           auto-activate-base: false
+          remove-profiles: false
       - name: Make IRkernel available to Jupyter
         run: |
           R -e "IRkernel::installspec()"
@@ -409,10 +418,11 @@ jobs:
       - name: Setup conda environment with python ${{ matrix.python }} and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R
+          activate-environment: python_3_with_R_${{ github.job_id }}
           environment-file: testing/env_python_${{ matrix.python }}_with_R.yml
           python-version: ${{ matrix.python }}
           auto-activate-base: false
+          remove-profiles: false
       - name: Make IRkernel available to Jupyter
         run: |
           R -e "IRkernel::installspec()"
@@ -445,10 +455,11 @@ jobs:
       - name: Setup conda environment with python 3.7 and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R
+          activate-environment: python_3_with_R_${{ github.job_id }}
           environment-file: testing/env_python_3_with_R.yml
           python-version: 3.7
           auto-activate-base: false
+          remove-profiles: false
       - name: Make IRkernel available to Jupyter
         run: |
           R -e "IRkernel::installspec()"
