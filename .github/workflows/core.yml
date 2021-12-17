@@ -35,6 +35,11 @@ jobs:
         python: [3.7, 3.8]
 #        arch: [ubuntu-20.04, ARM64]
         arch: [ARM64]
+        include:
+          - arch: ubuntu-20.04
+            javaArch: x64
+          - arch: ARM64
+            javaArch: aarch64
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -45,6 +50,7 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: 8
+          architecture: ${{ matrix.javaArch }}
       - name: Cache local Maven repository
         uses: actions/cache@v2
         with:
