@@ -60,6 +60,9 @@ jobs:
           key: ${{ runner.os }}-zeppelin-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-zeppelin-
+      - name: Prepare file system for Miniconda
+        run: |
+          touch $HOME/.profile $HOME/.bashrc
       - name: Setup conda environment with python ${{ matrix.python }} and R
         uses: conda-incubator/setup-miniconda@v2
         with:
