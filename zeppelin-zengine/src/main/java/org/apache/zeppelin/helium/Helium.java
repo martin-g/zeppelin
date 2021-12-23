@@ -99,10 +99,12 @@ public class Helium {
     allPackages = getAllPackageInfo();
 
     // TODO(jl): Refactor it
-    try {
-      bundleFactory.buildAllPackages(getBundlePackagesToBundle());
-    } catch (Exception e) {
-      logger.error(e.getMessage(), e);
+    if (bundleFactory != null) {
+      try {
+        bundleFactory.buildAllPackages(getBundlePackagesToBundle());
+      } catch (Exception e) {
+        logger.error(e.getMessage(), e);
+      }
     }
   }
 
