@@ -27,12 +27,19 @@ defaults:
 
 jobs:
   test-core-modules:
-    runs-on: ubuntu-20.04
+    runs-on: ${{ matrix.arch }}
     strategy:
       fail-fast: false
       matrix:
         hadoop: [hadoop2, hadoop3]
         python: [3.7, 3.8]
+#        arch: [ubuntu-20.04, ARM64]
+        arch: [ARM64]
+        include:
+          - arch: ubuntu-20.04
+            javaArch: x64
+          - arch: ARM64
+            javaArch: aarch64
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -43,6 +50,7 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: 8
+          architecture: ${{ matrix.javaArch }}
       - name: Cache local Maven repository
         uses: actions/cache@v2
         with:
@@ -52,14 +60,18 @@ jobs:
           key: ${{ runner.os }}-zeppelin-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-zeppelin-
+      - name: Prepare file system for Miniconda
+        run: |
+          touch $HOME/.profile $HOME/.bashrc
       - name: Setup conda environment with python ${{ matrix.python }} and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R
+          activate-environment: python_3_with_R_${{ github.job }}_${{ matrix.hadoop }}_${{ matrix.python }}
           environment-file: testing/env_python_${{ matrix.python }}_with_R.yml
           python-version: ${{ matrix.python }}
           auto-activate-base: false
           channel-priority: strict
+          remove-profiles: false
       - name: Make IRkernel available to Jupyter
         run: |
           R -e "IRkernel::installspec()"
@@ -72,6 +84,7 @@ jobs:
       - name: run tests with ${{ matrix.hadoop }}
         run: ./mvnw verify -Pusing-packaged-distr -DskipRat -pl zeppelin-server,zeppelin-web,spark-submit,spark/spark-dependencies,markdown,angular,shell -am -Phelium-dev -Pexamples -P${{ matrix.hadoop }} -Dtests.to.exclude=**/org/apache/zeppelin/spark/* -DfailIfNoTests=false
   test-interpreter-modules:
+    if: "false"
     runs-on: ubuntu-20.04
     env:
       INTERPRETERS: 'beam,hbase,pig,jdbc,file,flink,flink-cmd,ignite,kylin,lens,cassandra,elasticsearch,bigquery,alluxio,scio,livy,groovy,sap,java,geode,neo4j,hazelcastjet,submarine,sparql,mongodb,influxdb,ksql,scalding'
@@ -97,16 +110,18 @@ jobs:
       - name: Setup conda environment with python 3.7 and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R_and_tensorflow
+          activate-environment: python_3_with_R_and_tensorflow_${{ github.job }}_${{ matrix.hadoop }}_${{ matrix.python }}
           environment-file: testing/env_python_3_with_R_and_tensorflow.yml
           python-version: 3.7
           auto-activate-base: false
+          remove-profiles: false
       - name: Make IRkernel available to Jupyter
         run: |
           R -e "IRkernel::installspec()"
       - name: verify interpreter
         run: ./mvnw verify -DskipRat -am -pl .,zeppelin-interpreter,zeppelin-interpreter-shaded,${INTERPRETERS} -Pscala-2.10 -B
   test-zeppelin-client-integration-test:
+    if: "false"
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -130,10 +145,11 @@ jobs:
       - name: Setup conda environment with python 3.7 and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R
+          activate-environment: python_3_with_R_${{ github.job }}_${{ matrix.hadoop }}_${{ matrix.python }}
           environment-file: testing/env_python_3_with_R.yml
           python-version: 3.7
           auto-activate-base: false
+          remove-profiles: false
       - name: Make IRkernel available to Jupyter
         run: |
           R -e "IRkernel::installspec()"
@@ -145,6 +161,7 @@ jobs:
         run: ./mvnw test -DskipRat -pl zeppelin-interpreter-integration -Pintegration -DfailIfNoTests=false -Dtest=ZeppelinClientIntegrationTest,ZeppelinClientWithAuthIntegrationTest,ZSessionIntegrationTest
 
   test-flink-and-flink-integration-test:
+    if: "false"
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
@@ -172,10 +189,11 @@ jobs:
       - name: Setup conda environment with python 3.7 and
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_flink
+          activate-environment: python_3_with_flink_${{ github.job }}_${{ matrix.hadoop }}_${{ matrix.python }}
           environment-file: testing/env_python_3_with_flink_${{ matrix.flink }}.yml
           python-version: 3.7
           auto-activate-base: false
+          remove-profiles: false
       - name: install environment
         run: |
           ./mvnw install -DskipTests -DskipRat -am -pl flink/flink-scala-2.11,flink/flink-scala-2.12,flink-cmd,zeppelin-interpreter-integration -Pflink-${{ matrix.flink }} -Pintegration -B
@@ -184,6 +202,7 @@ jobs:
         run: ./mvnw test -DskipRat -pl flink/flink-scala-2.11,flink/flink-scala-2.12,flink-cmd,zeppelin-interpreter-integration -Pflink-${{ matrix.flink }} -Pintegration -DfailIfNoTests=false -B -Dtest=org.apache.zeppelin.flink.*,FlinkIntegrationTest${{ matrix.flink }}
 
   run-spark-intergration-test:
+    if: "false"
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -207,10 +226,11 @@ jobs:
       - name: Setup conda environment with python 3.7 and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R
+          activate-environment: python_3_with_R_${{ github.job }}_${{ matrix.hadoop }}_${{ matrix.python }}
           environment-file: testing/env_python_3_with_R.yml
           python-version: 3.7
           auto-activate-base: false
+          remove-profiles: false
       - name: Make IRkernel available to Jupyter
         run: |
           R -e "IRkernel::installspec()"
@@ -222,6 +242,7 @@ jobs:
         run: ./mvnw test -DskipRat -pl zeppelin-interpreter-integration,zeppelin-web,spark-submit,spark/spark-dependencies,markdown -am -Phadoop2 -Pintegration -B -Dtest=SparkSubmitIntegrationTest,ZeppelinSparkClusterTest24,SparkIntegrationTest24,ZeppelinSparkClusterTest30,SparkIntegrationTest30,ZeppelinSparkClusterTest31,SparkIntegrationTest31,ZeppelinSparkClusterTest32,SparkIntegrationTest32 -DfailIfNoTests=false
 
   jdbcIntegrationTest-and-unit-test-of-Spark-2-4-with-Scala-2-11:
+    if: "false"
     runs-on: ubuntu-20.04
     steps:
       # user/password => root/root
@@ -248,10 +269,11 @@ jobs:
       - name: Setup conda environment with python 3.7 and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R
+          activate-environment: python_3_with_R_${{ github.job }}_${{ matrix.hadoop }}_${{ matrix.python }}
           environment-file: testing/env_python_3_with_R.yml
           python-version: 3.7
           auto-activate-base: false
+          remove-profiles: false
       - name: Make IRkernel available to Jupyter
         run: |
           R -e "IRkernel::installspec()"
@@ -263,6 +285,7 @@ jobs:
         run: ./mvnw test -DskipRat -pl zeppelin-interpreter-integration,jdbc,zeppelin-web,spark-submit,spark/spark-dependencies,markdown -am -Pspark-2.4 -Pspark-scala-2.11 -Phadoop2 -Pintegration -B -Dtest=JdbcIntegrationTest,org.apache.zeppelin.spark.*,org.apache.zeppelin.kotlin.* -DfailIfNoTests=false
 
   spark-2-4-and-scala-2-12:
+    if: "false"
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -286,10 +309,11 @@ jobs:
       - name: Setup conda environment with python 3.7 and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R
+          activate-environment: python_3_with_R_${{ github.job }}_${{ matrix.hadoop }}_${{ matrix.python }}
           environment-file: testing/env_python_3_with_R.yml
           python-version: 3.7
           auto-activate-base: false
+          remove-profiles: false
       - name: Make IRkernel available to Jupyter
         run: |
           R -e "IRkernel::installspec()"
@@ -300,6 +324,7 @@ jobs:
         run: ./mvnw test -DskipRat -pl spark-submit,spark/spark-dependencies -am -Pspark-2.4 -Pspark-scala-2.12 -Phadoop2 -B -Dtest=org.apache.zeppelin.spark.*,org.apache.zeppelin.kotlin.* -DfailIfNoTests=false
 
   spark-3-0-and-scala-2-12-and-other-interpreter:
+    if: "false"
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
@@ -327,10 +352,11 @@ jobs:
       - name: Setup conda environment with python ${{ matrix.python }} and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R
+          activate-environment: python_3_with_R_${{ github.job }}_${{ matrix.hadoop }}_${{ matrix.python }}
           environment-file: testing/env_python_${{ matrix.python }}_with_R.yml
           python-version: ${{ matrix.python }}
           auto-activate-base: false
+          remove-profiles: false
       - name: Make IRkernel available to Jupyter
         run: |
           R -e "IRkernel::installspec()"
@@ -341,6 +367,7 @@ jobs:
         run: ./mvnw test -DskipRat -pl spark-submit,spark/spark-dependencies -am -Pspark-3.0 -Pspark-scala-2.12 -Phadoop2 -B -Dtest=org.apache.zeppelin.spark.*,apache.zeppelin.python.*,apache.zeppelin.jupyter.*,apache.zeppelin.r.* -DfailIfNoTests=false
 
   spark-3-1-and-scala-2-12-and-other-interpreter:
+    if: "false"
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
@@ -368,10 +395,11 @@ jobs:
       - name: Setup conda environment with python ${{ matrix.python }} and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R
+          activate-environment: python_3_with_R_${{ github.job }}_${{ matrix.hadoop }}_${{ matrix.python }}
           environment-file: testing/env_python_${{ matrix.python }}_with_R.yml
           python-version: ${{ matrix.python }}
           auto-activate-base: false
+          remove-profiles: false
       - name: Make IRkernel available to Jupyter
         run: |
           R -e "IRkernel::installspec()"
@@ -381,6 +409,7 @@ jobs:
         run: ./mvnw test -DskipRat -pl spark-submit,spark/spark-dependencies -am -Pspark-3.1 -Pspark-scala-2.12 -Phadoop2 -B -Dtest=org.apache.zeppelin.spark.*,apache.zeppelin.python.*,apache.zeppelin.jupyter.*,apache.zeppelin.r.* -DfailIfNoTests=false
 
   spark-3-2-and-scala-2-12-and-other-interpreter:
+    if: "false"
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
@@ -408,10 +437,11 @@ jobs:
       - name: Setup conda environment with python ${{ matrix.python }} and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R
+          activate-environment: python_3_with_R_${{ github.job }}_${{ matrix.hadoop }}_${{ matrix.python }}
           environment-file: testing/env_python_${{ matrix.python }}_with_R.yml
           python-version: ${{ matrix.python }}
           auto-activate-base: false
+          remove-profiles: false
       - name: Make IRkernel available to Jupyter
         run: |
           R -e "IRkernel::installspec()"
@@ -421,6 +451,7 @@ jobs:
         run: ./mvnw test -DskipRat -pl spark-submit,spark/spark-dependencies -am -Pspark-3.2 -Pspark-scala-2.12 -Phadoop2 -B -Dtest=org.apache.zeppelin.spark.*,apache.zeppelin.python.*,apache.zeppelin.jupyter.*,apache.zeppelin.r.* -DfailIfNoTests=false
 
   test-livy-0-5-with-spark-2-2-0-under-python3:
+    if: "false"
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -444,10 +475,11 @@ jobs:
       - name: Setup conda environment with python 3.7 and R
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: python_3_with_R
+          activate-environment: python_3_with_R_${{ github.job }}_${{ matrix.hadoop }}_${{ matrix.python }}
           environment-file: testing/env_python_3_with_R.yml
           python-version: 3.7
           auto-activate-base: false
+          remove-profiles: false
       - name: Make IRkernel available to Jupyter
         run: |
           R -e "IRkernel::installspec()"

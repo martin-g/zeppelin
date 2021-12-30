@@ -40,6 +40,11 @@ mkdir -p libpty/linux/x86_64/
 rm libpty/linux/x86_64/*
 wget -P libpty/linux/x86_64/ https://github.com/JetBrains/pty4j/blob/master/os/linux/x86_64/libpty.so
 
+mkdir -p libpty/linux/aarch64/
+rm libpty/linux/aarch64/*
+wget -P libpty/linux/aarch64/ https://github.com/JetBrains/pty4j/blob/master/os/linux/aarch64/libpty.so
+
+
 # macosx lib pty
 mkdir -p libpty/macosx/x86/
 rm libpty/macosx/x86/*

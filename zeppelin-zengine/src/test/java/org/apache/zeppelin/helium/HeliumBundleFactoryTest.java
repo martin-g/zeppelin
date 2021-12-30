@@ -17,10 +17,12 @@
 package org.apache.zeppelin.helium;
 
 import static org.apache.zeppelin.helium.HeliumBundleFactory.HELIUM_LOCAL_REPO;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeThat;
 
 import com.github.eirslett.maven.plugins.frontend.lib.InstallationException;
 import com.github.eirslett.maven.plugins.frontend.lib.TaskRunnerException;
@@ -37,12 +39,22 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class HeliumBundleFactoryTest {
+
+  private static final String OS_ARCH = System.getProperty("os.arch");
+  private static boolean isARM64 = OS_ARCH.equals("aarch64");
+
   private HeliumBundleFactory hbf;
   private File nodeInstallationDir;
   private String zeppelinHomePath;
 
   @Before
   public void setUp() throws InstallationException, TaskRunnerException, IOException {
+    // On Linux ARM64 this test fails with:
+    // com.github.eirslett.maven.plugins.frontend.lib.TaskRunnerException:
+    // 'yarn config set cache-folder /.../zeppelin/zeppelin/zeppelin-zengine/../local-repo/helium-bundle/yarn-cache
+    // --registry=https://registry.npmjs.org/' failed.
+    assumeThat(isARM64, is(false));
+
     zeppelinHomePath = System.getProperty(ConfVars.ZEPPELIN_HOME.getVarName());
     System.setProperty(ConfVars.ZEPPELIN_HOME.getVarName(), "../");
 
