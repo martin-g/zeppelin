@@ -86,7 +86,7 @@ repositories {
 // }
 
 dependencies {
-    compile 'org.jetbrains.pty4j:pty4j:0.12.6'
+    compile 'org.jetbrains.pty4j:pty4j:0.11.7'
 }
 ```
 
